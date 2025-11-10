@@ -1,4 +1,16 @@
-class Game:
+class IProgram:
+
+    def callTheGame(self):
+        raise NotImplementedError('the current method has not been implemented yet')
+    def install(self):
+        raise NotImplementedError('the current method has not been implemented yet')
+    def uninstall(self):
+        raise NotImplementedError('the current method has not been implemented yet')
+    def run(self):
+        raise NotImplementedError('the current method has not been implemented yet')
+
+
+class Game(IProgram):
     programType = "Video game"
 
     def __init__(self, gameName, gameCategory, gameScore, gamePrice=0.0):
@@ -45,9 +57,10 @@ class Game:
             print(f"{self.name} has started running on background")
 
 
-print(Game.programType)
+# print(Game.programType)
 silksong = Game("SilkSong", "metrovania", 9.8, 19.99)
-print(silksong)
-silksong.callThegame()
-silksong.install()
-silksong.install()
+# print(silksong)
+# silksong.callThegame()
+silksong.uninstall()
+# silksong.install()
+# silksong.install()
