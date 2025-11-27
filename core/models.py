@@ -3,7 +3,7 @@ from django.db import models
 
 class CityChoices(models.TextChoices):
     TEHRAN = ("tehran", "تهران")
-    ISFAHAN = ("isfahan", "اصهان")
+    ISFAHAN = ("isfahan", "اصفهان")
 
 
 class ShowToChoices(models.TextChoices):
@@ -26,7 +26,7 @@ class User(models.Model):
     username = models.CharField(max_length=32, unique=True, verbose_name="نام کاربری")
     password = models.CharField(max_length=20,verbose_name="رمز ورود")
     birthdate = models.DateField(null=True,verbose_name="تاریخ تولد")
-    bio = models.TextField(null=True,verbose_name='درباره من')
+    bio = models.TextField(null=True,verbose_name='درباره من',blank=True)
     city = models.CharField(
         max_length=20, choices=CityChoices.choices, default=CityChoices.ISFAHAN,verbose_name='شهر محل زندگی'
     )
@@ -58,7 +58,7 @@ class Post(models.Model):
     category = models.CharField(max_length=20, choices=CategoryChoices,verbose_name='دسته یندی')
 
     def __str__(self):
-        return f"{self.title}-{self.user.email}"
+        return f"{self.title}:   {self.content}"
 
     class Meta:
         verbose_name = "پست"
