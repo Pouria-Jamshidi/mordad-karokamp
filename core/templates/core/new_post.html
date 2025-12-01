@@ -1,0 +1,27 @@
+{%  extends 'core/layout.html' %}
+
+{% block title %} ایجاد پست جدید {% endblock %}
+
+{% block header %}  {%  endblock %}
+
+{% block main %}
+    <form action="" method="post">
+        <label for="title">عنوان: </label>
+        <input type="text" name="title" id="title" placeholder="تیتر پست">
+        <label for="content">محتوا: </label>
+        <textarea name="content" id="content" cols="40" rows="5"></textarea>
+        <label for="user">کاربر: </label>
+        <input type="text" name="user" id="user">
+        <label for="category">موضوع: </label>
+        <input type="text" name="category" id="category">
+
+
+
+
+
+        <input type="submit" value="ایجاد">
+
+    </form>
+{% endblock %}
+
+{% block footer %}  {% endblock %}

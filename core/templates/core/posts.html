@@ -1,0 +1,34 @@
+{% extends 'core/layout.html' %}
+
+{% block title %}
+    لیست پست ها
+{% endblock %}
+
+{% block style %}
+{% endblock %}
+
+{% block header %}
+
+{% endblock %}
+
+{% block main %}
+    <h1 title="this is a test title!">Hello!</h1>
+    {% for post in posts %} <!--we are using jinja language (this is how we do comments in html or ctrl+/-->
+        <p>{{ post.title }}</p>
+    {% endfor %}
+    <ul class="list-group bg-warning mt-4">
+    {% for post in posts %}
+
+       <li class="list-group-item bg-warning border border-1 border-dark d-flex justify-content-between"><a class="link text-decoration-non" href="post/{{ post.id }}/"><span>{{ post.title }}</span></a>  <span>{{ post.created_at }}</span></li>
+       <li class="list-group-item bg-warning border border-1 border-dark d-flex justify-content-between"><a class="link text-decoration-non" href="{% url 'post_detail' post_id=post.id %}"><span>{{ post.title }}</span></a>  <span>{{ post.created_at }}</span></li>
+
+
+
+    {% endfor %}
+    </ul >
+{% endblock %}
+
+{% block footer %}
+{% endblock %}
+
+
