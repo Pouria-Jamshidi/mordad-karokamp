@@ -20,6 +20,10 @@ class GenderChoices(models.TextChoices):
 class CategoryChoices(models.TextChoices):
     SOCIAL = ("social", "اجتماعی")
     SPORT = ("sport", "ورزشی")
+    GAME = ("game","بازی")
+    NEWS = ("news","اخبار")
+    ART = ("art","هنر")
+    WEATHER = ("weather","آب و هوا")
 
 
 class User(models.Model):
