@@ -13,6 +13,7 @@
 
         {% block style %}
         {% endblock %}
+
     </style>
 </head>
 
@@ -57,20 +58,26 @@
             </div>
           </div>
         </nav>
+
         {% block header %}
         {% endblock %}
+
     </header>
 
-    <div class="container">
-        <main>
+    <main>
+        <div class="container">
+
             {% block main %}
             {% endblock %}
-        </main>
-    </div>
+
+        </div>
+    </main>
 
     <footer>
+
         {% block footer %}
         {% endblock %}
+
     </footer>
 
 
