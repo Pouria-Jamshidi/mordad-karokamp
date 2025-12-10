@@ -1,0 +1,25 @@
+{%  extends 'core/layout.html' %}
+
+{% block title %} مشخصات کاربر {% endblock %}
+
+{% block header %}{%  endblock %}
+
+{% block main %}
+    <div class="card" style="width: 18rem;">
+      <div class="card-body">
+        <h5 class="card-title">{{ user.username}}</h5>
+        <p class="card-text">{{ user.birthdate }}</p>
+          <p class="card-text">{{ user.city }}</p>
+          <p class="card-text">{{ user.email }}</p>
+          <p class="card-text">{{ user.close_friend }}</p>
+          <p class="card-text">{{ user.bio }}</p>
+      </div>
+      <div class="card-footer d-flex justify-content-between">
+          <a href="#" class="btn btn-warning">ویرایش</a>
+          <a href="#" class="btn btn-danger">حذف</a>
+      </div>
+
+    </div>
+{% endblock %}
+
+{% block footer %} this is the footer {% endblock %}
