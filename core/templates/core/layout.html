@@ -71,7 +71,13 @@
     </header>
 
     <main>
-        <div class="container">
+        <div class="container-fluid p-5">
+
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-success bnazanin">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
 
             {% block main %}
             {% endblock %}

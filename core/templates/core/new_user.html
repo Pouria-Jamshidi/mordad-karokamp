@@ -5,13 +5,25 @@
 {% block header %}{%  endblock %}
 
 {% block main %}
-    <form action="{% url 'new_user' %}" method="post">
-        {% csrf_token %}
-        {{ newUser_form.as_p }}
+
+    <div class="row mt-4 p-5 d-flex justify-content-center">
+
+        <div class="col-sm-6 border border-2 p-3">
+            <h1 class="bnazanin">
+                ایجاد کاربر جدید
+            </h1>
+            <hr>
+            <form action="{% url 'new_user' %}" method="post">
+                {% csrf_token %}
+                {{ newUser_form.as_p }}
 
 
-        <input type="submit" value="ایجاد کاربر">
-    </form>
+                <input type="submit" value="ایجاد کاربر">
+            </form>
+
+        </div>
+    </div>
+
 
 {% endblock %}
 

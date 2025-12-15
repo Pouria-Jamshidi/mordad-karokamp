@@ -5,14 +5,28 @@
 {% block header %}{%  endblock %}
 
 {% block main %}
-    <div class="card" style="width: 18rem;">
+    <div class="card" style="width: 36rem;">
       <div class="card-body">
-        <h5 class="card-title">{{ user.username}}</h5>
+        <h5 class="card-title" style="text-align: center">نام کاربری : {{ user.username}}</h5>
+        <hr>
+        <h5 dir="rtl">تاریخ تولد :</h5>
         <p class="card-text">{{ user.birthdate }}</p>
-          <p class="card-text">{{ user.city }}</p>
-          <p class="card-text">{{ user.email }}</p>
-          <p class="card-text">{{ user.close_friend }}</p>
-          <p class="card-text">{{ user.bio }}</p>
+        <hr>
+        <h5 dir="rtl">شهر محل سکونت :</h5>
+        <p class="card-text">{{ user.city }}</p>
+        <hr>
+        <h5 dir="rtl">ایمیل :</h5>
+        <p class="card-text">{{ user.email }}</p>
+        <hr>
+        <h5 dir="rtl">دوستان صمیمی :</h5>
+        {% for closeFriend in user.close_friend.all %}
+            <ul>
+                <li class="card-text">{{ closeFriend }}</li>
+            </ul>
+        {% endfor %}
+        <hr>
+        <h5 dir="rtl">شرح حال :</h5>
+        <p class="card-text">{{ user.bio }}</p>
       </div>
       <div class="card-footer d-flex justify-content-between">
           <a href="#" class="btn btn-warning">ویرایش</a>
@@ -22,4 +36,4 @@
     </div>
 {% endblock %}
 
-{% block footer %} this is the footer {% endblock %}
+{% block footer %}{% endblock %}

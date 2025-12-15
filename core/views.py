@@ -1,6 +1,7 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from core.forms import PostForm, NewUser
 from core.models import Post, User
+from django.contrib import messages
 
 
 def main_page(request):
@@ -10,7 +11,7 @@ def main_page(request):
 # ===========================================================================================================
 # here we have views related to posts
 def posts(request):
-    p = Post.objects.all()
+    p = Post.objects.filter(is_deleted=False)
     return render(request, 'core/posts.html', context={'posts': p})
 
 
@@ -36,15 +37,45 @@ def new_post(request):
         form = PostForm(request.POST)
 
         if form.is_valid():
-            data = form.cleaned_data
-            userName = data.pop('username')
-            user = User.objects.filter(username=userName).first()
-            if user:
-                new_post = Post.objects.create(**data, user=user)
-                print(new_post.id)
-                return redirect('posts')
+            # =======================================================
+            # second way (Django form)
+            # data = form.cleaned_data
+            # userName = data.pop('username')
+            # user = User.objects.filter(username=userName).first()
+            # if user:
+            #     new_post = Post.objects.create(**data, user=user)
+            #     print(new_post.id)
+            #     return redirect('posts')
+
+            # =======================================================
+            # third way (model form)
+            form.save()
+            messages.success(request, 'پست شما با موفقیت ثبت شد')
+            return redirect('posts')
 
     return render(request, 'core/new_post.html', {'newPost_form': form})
+
+
+def delete_post(request, post_id):
+    """
+    this exists for deleting a post
+    it will redirect you to posts page afterward
+    :param request:
+    :param post_id:
+    :return:
+    """
+    # first usual way
+    # post = Post.objects.filter(pk=post_id).first()
+
+    # second way, make sure to import in django.shortcuts
+    post = get_object_or_404(Post, pk=post_id)
+    # post.delete() # we dont wanna actually delete it so we cant use this
+    post.is_deleted = True
+    post.save()
+    messages.success(request,"حذف شد")
+    return redirect('posts')
+
+
 
 
 # ===========================================================================================================

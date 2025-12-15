@@ -12,15 +12,15 @@
 {% endblock %}
 
 {% block main %}
-    <h1 title="this is a test title!">Hello!</h1>
-    {% for post in posts %} <!--we are using jinja language (this is how we do comments in html or ctrl+/-->
-        <p>{{ post.title }}</p>
-    {% endfor %}
+    <h1 title="لیست پست ها" class="bnazanin">لیست پست ها</h1>
+{#    {% for post in posts %} <!--we are using jinja language (this is how we do comments in html or ctrl+/-->#}
+{#        <p>{{ post.title }}</p>#}
+{#    {% endfor %}#}
     <ul class="list-group bg-warning mt-4">
     {% for post in posts %}
 
-       <li class="list-group-item bg-warning border border-1 border-dark d-flex justify-content-between"><a class="link text-decoration-non" href="post/{{ post.id }}/"><span>{{ post.title }}</span></a>  <span>{{ post.created_at }}</span></li>
-       <li class="list-group-item bg-warning border border-1 border-dark d-flex justify-content-between"><a class="link text-decoration-non" href="{% url 'post_detail' post_id=post.id %}"><span>{{ post.title }}</span></a>  <span>{{ post.created_at }}</span></li>
+{#       <li class="list-group-item bg-warning border border-1 border-dark d-flex justify-content-between"><a class="link text-decoration-non" href="post/{{ post.id }}/"><span>{{ post.title }}</span></a>  <span>{{ post.created_at }}</span></li>#}
+       <li class="list-group-item bg-warning border border-1 border-dark d-flex justify-content-between"><a class="link text-decoration-non bnazanin-bold" href="{% url 'post_detail' post_id=post.id %}"><span>{{ post.title }}</span></a>  <span>{{ post.created_at }}</span></li>
 
 
 
