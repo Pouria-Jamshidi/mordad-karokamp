@@ -1,0 +1,18 @@
+{% extends 'core/layout.html' %}
+
+{% block title %} ویرایش پست {% endblock %}
+
+{% block header %}  {% endblock %}
+
+{% block main %}
+    <form action="{% url 'edit_post' post_id=post.id%}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+
+
+        <input type="submit" value="تغییر">
+
+    </form>
+{% endblock %}
+
+{% block footer %}  {% endblock %}

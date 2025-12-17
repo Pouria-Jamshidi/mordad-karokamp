@@ -5,7 +5,8 @@
 {% block header %}  {% endblock %}
 
 {% block main %}
-    <form action="{% url 'new_post' %}" method="post">
+    <form action="{% url 'new_post' %}" method="post" enctype="multipart/form-data">
+    <!--breaks big files to chunks and upload thos chunks, without this, the pictures wont upload-->
         {% csrf_token %}
         {{ newPost_form.as_p }}
 

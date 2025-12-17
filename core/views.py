@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from core.forms import PostForm, NewUser
+from core.forms import PostForm, NewUser, EditPostForm
 from core.models import Post, User
 from django.contrib import messages
+import os
 
 
 def main_page(request):
@@ -34,7 +35,7 @@ def new_post(request):
     #         pass
     form = PostForm()
     if request.method == 'POST':
-        form = PostForm(request.POST)
+        form = PostForm(request.POST, request.FILES)
 
         if form.is_valid():
             # =======================================================
@@ -72,10 +73,45 @@ def delete_post(request, post_id):
     # post.delete() # we dont wanna actually delete it so we cant use this
     post.is_deleted = True
     post.save()
-    messages.success(request,"حذف شد")
+    messages.success(request, "حذف شد")
     return redirect('posts')
 
 
+def edit_post(request, post_id):
+    """
+    this exists for editing a post and redirect us to the edited post
+    :param request:
+    :param post_id:
+    :return:
+    """
+    post = get_object_or_404(Post, pk=post_id)
+    form = EditPostForm(instance=post)
+
+    # STEP1: adding the address of before edit pic inside so we can remove it of needed afterward
+    old_image = post.image
+
+    if request.method == 'POST':
+        form = EditPostForm(request.POST, request.FILES, instance=post)
+        # user = post.user
+        if form.is_valid():
+            edited_post = form.save(commit=False)
+
+            # STEP 2: image changed or removed
+            if old_image and old_image != edited_post.image:
+                # delete old image file from disk
+                old_path = old_image.path
+                if os.path.exists(old_path):
+                    os.remove(old_path)
+
+            # way told in class to have a user showin with disable active
+            # old = form.save(commit=False)
+            # old.user = user
+            # old.save()
+
+            edited_post.save()
+            messages.success(request, "تغییرات با موفقیت اعمال شد.")
+            return redirect('post_detail', post_id=post.id)
+    return render(request, 'core/edit_post.html', {'form': form, 'post': post})
 
 
 # ===========================================================================================================

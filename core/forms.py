@@ -31,7 +31,7 @@ class PostForm(forms.ModelForm):
 
     class Meta:
         model = Post
-        fields = ['title', 'content', 'user', 'category', 'show_to', 'visible']
+        fields = ['title', 'content','image', 'user', 'category', 'show_to', 'visible']
 
         widgets = {
             "content": forms.Textarea(attrs={'class': 'form-control'}),
@@ -59,13 +59,26 @@ class PostForm(forms.ModelForm):
             raise forms.ValidationError('تیتر حتما باید در متن پست باشد')
 
 
+class EditPostForm(forms.ModelForm):
+    user_display = forms.CharField(label="نویسنده",required=False,disabled=True)
+    # user = forms.ModelChoiceField(queryset=User.objects.all(),widget=forms.Select(attrs={'class': 'form-control','disabled': True}))
+    class Meta:
+        model = Post
+        fields = ['title', 'user_display', 'content','image', 'category', 'show_to', 'visible']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self.instance.pk:
+            self.fields['user_display'].initial = self.instance.user.username
+
+
 class NewUser(forms.Form):
     username = forms.CharField(label="نام کاربری", max_length=32)
     password = forms.CharField(label="رمز عبور", max_length=20, widget=forms.PasswordInput(render_value=False))
     # password = forms.CharField(label="رمز عبور", max_length=20, widget=forms.PasswordInput(render_value=False,attrs={'class':'bnazanin'})) why not working for label???
     birthdate = forms.DateField(label="تاریخ تولد",
                                 widget=forms.DateInput(attrs={'type': 'date', 'class': 'datepicker'}))
-    bio = forms.CharField(label='درباره من',widget=forms.Textarea(attrs={'class': 'form-control'}))
+    bio = forms.CharField(label='درباره من', widget=forms.Textarea(attrs={'class': 'form-control'}))
     city = forms.ChoiceField(label="شهر محل سکونت", choices=CityChoices.choices, initial=CityChoices.ISFAHAN)
     email = forms.EmailField(label="ایمیل")
     close_friend = forms.ModelMultipleChoiceField(label="دوستان نزدیک", queryset=User.objects.all())
