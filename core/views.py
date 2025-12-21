@@ -97,7 +97,7 @@ def edit_post(request, post_id):
             edited_post = form.save(commit=False)
 
             # STEP 2: image changed or removed
-            if old_image and old_image != edited_post.image:
+            if old_image != edited_post.image:
                 # delete old image file from disk
                 old_path = old_image.path
                 if os.path.exists(old_path):

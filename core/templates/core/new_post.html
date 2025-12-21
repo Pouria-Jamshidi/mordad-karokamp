@@ -5,15 +5,21 @@
 {% block header %}  {% endblock %}
 
 {% block main %}
-    <form action="{% url 'new_post' %}" method="post" enctype="multipart/form-data">
-    <!--breaks big files to chunks and upload thos chunks, without this, the pictures wont upload-->
-        {% csrf_token %}
-        {{ newPost_form.as_p }}
+    <div class="row mt-4 p-5 d-flex justify-content-center">
+        <div class="col-sm-6 p-3 border border-2">
+            <h1 class="bnazanin">ایجاد پست جدید</h1>
+            <hr>
+            <form action="{% url 'new_post' %}" method="post" enctype="multipart/form-data" class="bnazanin">
+            <!--enctype="multipart/form-data" breaks big files to chunks and upload those chunks, without this, the pictures wont upload-->
+                {% csrf_token %}
+                {{ newPost_form.as_p }}
 
 
-        <input type="submit" value="ایجاد">
+                <input type="submit" value="ایجاد">
 
-    </form>
+            </form>
+        </div>
+    </div>
 {% endblock %}
 
 {% block footer %}  {% endblock %}
