@@ -1,10 +1,15 @@
-from django.shortcuts import redirect, render
-from core.models import Post, User
-from core.forms import PostForm
+from email import message
+from django.shortcuts import redirect, render, get_object_or_404
+from core.models import Post
+from core.forms import PostForm, EditPostForm
+from django.contrib import messages
+import shutil
+import pathlib
+from accounts.models import User
 
 
 def jadid(request):
-    p = Post.objects.all()
+    p = Post.objects.filter(is_deleted=False)
     return render(request, "core/home.html", context={"posts": p})
 
 
@@ -34,14 +39,38 @@ def post_detail(request, post_id):
 def new_post(request):
     form = PostForm()
     if request.method == "POST":
-        form = PostForm(request.POST)
+        form = PostForm(request.POST, request.FILES)
         if form.is_valid():
-            data = form.cleaned_data
-            username = data.pop("username")
-            user = User.objects.filter(username=username).first()
-            if user:
-                new_post = Post.objects.create(**data, user=user)
-                print(new_post.id)
-                return redirect("home")
+            form.save()
+            messages.success(request, "پست شما با موفقیت ثبت شد")
+            return redirect("home")
 
     return render(request, "core/new_post.html", {"harchi": form})
+
+
+def delete_post(request, post_id):
+    post = get_object_or_404(Post, pk=post_id)
+    post.is_deleted = True
+
+    post.save()
+    address = pathlib.Path(post.image.url)
+    shutil.rmtree(address)
+    messages.success(request, "پست مورد نظر با موفقیت پاک شد")
+    return redirect("home")
+
+
+def edit_post(request, post_id):
+    post = get_object_or_404(Post, pk=post_id)
+    form = EditPostForm(instance=post)
+
+    user = post.user
+    if request.method == "POST":
+        form = EditPostForm(request.POST, request.FILES, instance=post)
+        if form.is_valid():
+            form.save(commit=False)
+            post.user = user
+            post.save()
+
+            messages.success(request, "تغییرات با موفقیت اعمال شد")
+            return redirect("post_detail", post_id=post.id)
+    return render(request, "core/edit_post.html", {"form": form, "post": post})
