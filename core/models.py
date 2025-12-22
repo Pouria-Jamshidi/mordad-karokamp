@@ -1,53 +1,32 @@
 from django.db import models
+from datetime import datetime
+from accounts.models import User
 
-
-class CityChoices(models.TextChoices):
-    TEHRAN = ("tehran", "تهران")
-    ISFAHAN = ("isfahan", "اصفهان")
-
-
+# =================================== Text Choices ===================================
 class ShowToChoices(models.TextChoices):
     NOBODY = ("nobody", "هیچکس")
     CLOSEFRIENDS = ("closefriends", "دوستان صمیمی")
     ALL = ("all", "همه")
 
 
-class GenderChoices(models.TextChoices):
-    MALE = ("male", "مرد")
-    FEMALE = ("female", "زن")
-
-
 class CategoryChoices(models.TextChoices):
     SOCIAL = ("social", "اجتماعی")
     SPORT = ("sport", "ورزشی")
 
-
-class User(models.Model):
-    username = models.CharField(max_length=32, unique=True, verbose_name="نام کاربری")
-    password = models.CharField(max_length=20, verbose_name="رمز ورود")
-    birthdate = models.DateField(null=True, verbose_name="تاریخ تولد")
-    bio = models.TextField(null=True, verbose_name='درباره من', blank=True)
-    city = models.CharField(
-        max_length=20, choices=CityChoices.choices, default=CityChoices.ISFAHAN, verbose_name='شهر محل زندگی'
-    )
-    email = models.EmailField("ایمیل")
-    close_friend = models.ManyToManyField(to="self", null=True, blank=True, verbose_name='دوستان نزدیک')
-
-    def __str__(self):
-        return f"{self.username}"
-
-    class Meta:
-        verbose_name = "کاربر"
-        verbose_name_plural = "کاربر"
-
-
-admin_user = User.objects.filter(username="admin").first()
-
+# =================================== Models ===================================
+def post_picture_path(instance, filename):
+    '''
+    a function to generate a dynamic post picture path
+    :param instance: the User model in accounts application
+    :param filename: name of the file
+    :return: path to post picture
+    '''
+    return f"profile_pictures/{datetime.now().strftime('%Y%m%d')}/{instance.user.username}/{instance.id}/{filename}"
 
 class Post(models.Model):
     title = models.CharField(max_length=50, verbose_name='تیتر')
     content = models.TextField(verbose_name='محتوا')
-    user = models.ForeignKey(to=User, on_delete=models.SET_NULL, null=True, verbose_name='کاربر')
+    user = models.ForeignKey(to=User, on_delete=models.SET_NULL, null=True, verbose_name='کاربر',related_name='posts')
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='زمان ساخت پست')
     updated_at = models.DateTimeField(auto_now=True, verbose_name='آخرین زمان تغییرات پست')
     visible = models.BooleanField(default=False, verbose_name='قابل رویت بودن')
@@ -56,7 +35,12 @@ class Post(models.Model):
     )
     is_deleted = models.BooleanField(default=False, verbose_name='حذف شده')
     category = models.CharField(max_length=20, choices=CategoryChoices, verbose_name='دسته بندی')
-    image = models.ImageField(upload_to='post_pictures', null=True, blank=True)
+    image = models.ImageField(upload_to=post_picture_path, null=True, blank=True,verbose_name='اپلود عکس')
+
+    def has_image(self):
+        if self.image:
+            return True
+        return False
 
     def __str__(self):
         return f"{self.title}:   {self.content}"

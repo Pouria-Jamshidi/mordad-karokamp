@@ -1,9 +1,7 @@
 from django import forms
 from django.core.exceptions import ValidationError
 from django.core.validators import MinLengthValidator
-from unicodedata import category
-
-from core.models import CategoryChoices, CityChoices, User, Post
+from core.models import CategoryChoices, Post
 
 
 # second way (Django form)
@@ -25,8 +23,8 @@ from core.models import CategoryChoices, CityChoices, User, Post
 #                 raise forms.ValidationError('لحنتو بفهم')
 #         return d
 
-# third way(model form)
-class PostForm(forms.ModelForm):
+
+class PostForm(forms.ModelForm): # third way(model form)
     # tag = forms.CharField(max_length=40, widget=forms.TextInput(attrs={'class': 'form-control'}))
 
     class Meta:
@@ -60,47 +58,24 @@ class PostForm(forms.ModelForm):
 
 
 class EditPostForm(forms.ModelForm):
-    user_display = forms.CharField(label="نویسنده",required=False,disabled=True)
-    # user = forms.ModelChoiceField(queryset=User.objects.all(),widget=forms.Select(attrs={'class': 'form-control','disabled': True}))
+    # user_display = forms.CharField(label="نویسنده",required=False,disabled=True) #first way of doing adding a just for show user value in our form.
     class Meta:
         model = Post
-        fields = ['title', 'user_display', 'content','image', 'category', 'show_to', 'visible']
+        # fields = ['title', 'user_display', 'content','image', 'category', 'show_to', 'visible'] #first way of doing adding a just for show user value in our form.
+        fields = ['title', 'user', 'content','image', 'category', 'show_to', 'visible'] #second way of doing adding a just for show user value in our form.
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        if self.instance.pk:
-            self.fields['user_display'].initial = self.instance.user.username
+        # # first way of adding a just for show user value in our form
+        # if self.instance.pk:
+        #     self.fields['user_display'].initial = self.instance.user.username
 
-
-class NewUser(forms.Form):
-    username = forms.CharField(label="نام کاربری", max_length=32)
-    password = forms.CharField(label="رمز عبور", max_length=20, widget=forms.PasswordInput(render_value=False))
-    # password = forms.CharField(label="رمز عبور", max_length=20, widget=forms.PasswordInput(render_value=False,attrs={'class':'bnazanin'})) why not working for label???
-    birthdate = forms.DateField(label="تاریخ تولد",
-                                widget=forms.DateInput(attrs={'type': 'date', 'class': 'datepicker'}))
-    bio = forms.CharField(label='درباره من', widget=forms.Textarea(attrs={'class': 'form-control'}))
-    city = forms.ChoiceField(label="شهر محل سکونت", choices=CityChoices.choices, initial=CityChoices.ISFAHAN)
-    email = forms.EmailField(label="ایمیل")
-    close_friend = forms.ModelMultipleChoiceField(label="دوستان نزدیک", queryset=User.objects.all())
-
-    def clean_username(self):
-        """
-        this is to make sure username is not empty
-        :return: empty validation error
-
-        """
-        username = self.cleaned_data.get('username')
-        if len(username) == 0:
-            raise forms.ValidationError('این فیلد نمیتواند خالی باشد')
-        return username
-
-    def clean_password(self):
-        """
-        this is to make sure password is not empty
-        :return: empty validation error
-
-        """
-        password = self.cleaned_data.get('password')
-        if len(password) == 0:
-            raise forms.ValidationError('این فیلد نمیتواند خالی باشد')
-        return password
+        #second way of doing adding a just for show user value in our form:
+        self.fields['user'].disabled = True
+    #second way of doing adding a just for show user value in our form
+    def clean_user(self):
+        '''
+        since the user form is disabled, we use this validation to return post's actual user value to our form
+        :return:
+        '''
+        return self.instance.user

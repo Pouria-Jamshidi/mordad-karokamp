@@ -1,12 +1,5 @@
-/*h1 {*/
-/*    color: blue;*/
-/*    text-align: center;*/
 
-/*}*/
-
-
-/* ========================================================================================================================
-fonts codes */
+/* =========================================================== Font Codes =============================================================*/
 /* adding and installing the fonts */
 @font-face {
     font-family: 'B Nazanin';
@@ -22,7 +15,7 @@ fonts codes */
 }
 
 @font-face {
-    font-family: 'B Nazanin';
+    font-family: 'B Nazanin Bold';
     src: local('B Nazanin Bold'), 
         local('BNazanin-Bold'),
         url('../fonts/BNaznnBd.woff2') format('woff2'), 
@@ -38,6 +31,12 @@ fonts codes */
 /* classes using said fonts */
 .bnazanin {
     font-family: 'B Nazanin', Arial, sans-serif;
+    direction: rtl;
+    text-align: right;
+}
+
+.bnazaninBold {
+    font-family: 'B Nazanin Bold', Arial, sans-serif;
     direction: rtl;
     text-align: right;
 }

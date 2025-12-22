@@ -17,17 +17,18 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
+# ==========================================================================
 # make sure to delete this after development unless we use if settings.DEBUG
 from django.conf import settings
 from django.conf.urls.static import static
 
-# ==========================================
+# ==========================================================================
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include("core.urls")),
-
+    path('', include("core.urls")), # connecting to the urls in core app
+    path('accounts/', include('accounts.urls')), # connecting to the urls in accounts app
 ]
 
 # makes sure it only happends during debugging

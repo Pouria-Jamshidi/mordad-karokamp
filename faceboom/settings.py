@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "core.apps.CoreConfig",
+    "accounts.apps.AccountsConfig",
 ]
 
 MIDDLEWARE = [
@@ -69,6 +70,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "faceboom.wsgi.application"
 
+AUTH_USER_MODEL = "accounts.User" # We added this to switch our authentication from Django to our own model
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases

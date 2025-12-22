@@ -1,0 +1,30 @@
+{% extends 'core/layout.html' %}
+
+{% block title %}ثبت نام{% endblock %}
+
+{% block header %}{%  endblock %}
+
+{% block main %}
+
+    <div class="row mt-4 p-5 d-flex justify-content-center">
+
+        <div class="col-sm-6 border border-2 p-3" style="background-color: rgba(193, 245, 238, 0.2)">
+            <h1 class="bnazaninBold">
+                ایجاد کاربر جدید
+            </h1>
+            <hr>
+            <form action="{% url 'register' %}" method="post" class="bnazanin">
+                {% csrf_token %}
+                {{ register_form.as_p }}
+
+
+                <input type="submit" class="btn btn-primary" value="ثبت نام">
+            </form>
+
+        </div>
+    </div>
+
+
+{% endblock %}
+
+{% block footer %}{% endblock %}

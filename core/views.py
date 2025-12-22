@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from core.forms import PostForm, NewUser, EditPostForm
-from core.models import Post, User
+from core.forms import PostForm, EditPostForm
+from core.models import Post
+from accounts.models import User
 from django.contrib import messages
 import os
 
@@ -17,6 +18,12 @@ def posts(request):
 
 
 def post_detail(request, post_id):
+    '''
+    view function for details of a certain post and 'post_detail' URL
+    :param request:
+    :param post_id:
+    :return:
+    '''
     post = Post.objects.get(pk=post_id)
     return render(request, 'core/post_detail.html', {'post': post})
 
@@ -79,7 +86,7 @@ def delete_post(request, post_id):
 
 def edit_post(request, post_id):
     """
-    this exists for editing a post and redirect us to the edited post
+    view function for editing a post and 'edit_post' URL.
     :param request:
     :param post_id:
     :return:
@@ -117,6 +124,11 @@ def edit_post(request, post_id):
 # ===========================================================================================================
 # here we have views related to users
 def user_list(request):
+    """
+    view function for List of users and users URL
+    :param request:
+    :return:
+    """
     u = User.objects.all()
     return render(request, 'core/users.html', {'users': u})
 
@@ -131,24 +143,5 @@ def user_detail(request, user_id):
     userDetail = User.objects.get(pk=user_id)
     return render(request, 'core/user_detail.html', {'user': userDetail})
 
-
-def new_user(request):
-    """
-    this is for new_user url
-    :param request:
-    :return:
-    """
-    form = NewUser()
-    if request.method == 'POST':
-        form = NewUser(request.POST)
-
-        if form.is_valid():
-            data = form.cleaned_data
-            close_friends = data.pop('close_friend')
-            new_user = User.objects.create(**data)
-            new_user.close_friend.set(close_friends)
-            # print(new_user.id)
-            return redirect('users')
-    return render(request, 'core/new_user.html', {'newUser_form': form})
 # ===========================================================================================================
 # Create your views here.
