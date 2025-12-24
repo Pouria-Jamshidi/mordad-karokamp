@@ -1,6 +1,6 @@
 {% extends 'core/layout.html' %}
 
-{% block title %}ثبت نام{% endblock %}
+{% block title %}ورود{% endblock %}
 
 {% block header %}{%  endblock %}
 
@@ -10,25 +10,25 @@
 
         <div class="col-sm-3 border border-2 p-3" style="background-color: rgba(193, 245, 238, 0.2)">
             <h1 class="bnazaninBold">
-                ایجاد کاربر جدید
+                ورود کاربر
             </h1>
             <hr>
-            <form action="{% url 'register' %}" method="post" class="bnazanin">
+            <form action="{% url 'login' %}" method="post" class="bnazanin">
                 {% csrf_token %}
-                {{ register_form.as_p }}
+                {{ login_form.as_p }}
 
 
-                <input type="submit" class="btn btn-primary" value="ثبت نام">
+                <input type="submit" class="btn btn-primary" value="ورود">
             </form>
-
         </div>
     </div>
     <div class="row d-flex justify-content-center">
         <div class="col-sm-3">
-            <a href="{% url "login"%}" class="bnazanin">من اکانت دارم</a>
+            <a href="#" class="bnazanin">رمز خود را فراموش کرده اید؟</a>
+            <br>
+            <a href="{% url "register"%}" class="bnazanin">ساخت اکانت جدید</a>
         </div>
     </div>
-
 
 {% endblock %}
 

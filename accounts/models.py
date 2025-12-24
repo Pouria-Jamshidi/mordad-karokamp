@@ -28,7 +28,7 @@ def profile_picture_path(instance, filename):
     :param filename: name of the file
     :return: path to profile picture
     '''
-    return f"profile_pictures/{instance.gender}/{instance.username}/{datetime.now().strftime('%Y%m%d')}/{filename}"
+    return f"profile_pictures/{instance.gender}/{instance.username}/{datetime.now().strftime('%Y-%m-%d')}/{filename}"
 
 
 class User(AbstractUser):

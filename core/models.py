@@ -21,7 +21,7 @@ def post_picture_path(instance, filename):
     :param filename: name of the file
     :return: path to post picture
     '''
-    return f"profile_pictures/{datetime.now().strftime('%Y%m%d')}/{instance.user.username}/{instance.id}/{filename}"
+    return f"post_pictures/{datetime.now().strftime('%Y-%m-%d')}/{instance.user.username}/{filename}"
 
 class Post(models.Model):
     title = models.CharField(max_length=50, verbose_name='تیتر')
@@ -38,7 +38,7 @@ class Post(models.Model):
     image = models.ImageField(upload_to=post_picture_path, null=True, blank=True,verbose_name='اپلود عکس')
 
     def has_image(self):
-        if self.image:
+        if self.image and self.image.url:
             return True
         return False
 
