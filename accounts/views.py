@@ -55,3 +55,7 @@ def logout_view(request):
     logout(request)
     messages.success(request, "شما با موفقیت خارج شدید")
     return redirect("login")
+
+
+def profile(request):
+    return render(request, "accounts/profile.html")

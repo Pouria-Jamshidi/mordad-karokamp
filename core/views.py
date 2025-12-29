@@ -6,6 +6,7 @@ import shutil
 import pathlib
 from accounts.models import User
 from django.contrib.auth.decorators import login_required
+from django.db.models import Count, F
 
 
 def jadid(request):
@@ -91,7 +92,15 @@ def edit_post(request, post_id):
 
 
 def like(request, post_id):
+    post = get_object_or_404(
+        Post.objects.annotate(like_count=Count(F("post_likes"))), pk=post_id
+    )
+    is_liked = post.post_likes.filter(user=request.user).exists()
     if request.method == "POST":
-        post = get_object_or_404(Post, pk=post_id)
-        like = Like.objects.create(user=request.user, post=post)
-        return redirect("post_detail", post_id=post.id)
+        like, created = Like.objects.update_or_create(user=request.user, post=post)
+        if not created:
+            like.delete()
+
+    return render(
+        request, "core/post_detail.html", {"post": post, "is_liked": is_liked}
+    )

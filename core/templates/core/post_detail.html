@@ -12,6 +12,7 @@
 
 <div class="card" style="width: 18rem;">
     <img src="{{ post.image.url }}" class="card-img-top" alt="">
+    {{ post.file.url }}
     <div class="card-body">
         <h5 class="card-title">{{ post.title }} </h5>
         <p class="card-text">{{ post.content }} </p>
@@ -31,7 +32,13 @@
 
         <form action="{% url 'like' post_id=post.id %}" method="post">
             {% csrf_token %}
-            <input id="image" type="image" width="100" height="30" alt="Login" src="{% static 'images/like.png' %}" />
+            {% if is_liked %}
+
+            <button class="like-btn" type="submit"><i class="bi bi-hand-thumbs-up-fill"></i></button>
+            {% else %}
+            <button class="like-btn" type="submit"><i class="bi bi-hand-thumbs-up"></i></button>
+            {% endif %}
+            {{ post.like_count }}
         </form>
 
 

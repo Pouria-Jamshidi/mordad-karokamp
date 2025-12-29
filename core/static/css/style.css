@@ -10,3 +10,11 @@ textarea {
 label {
     font-family: 'Vazirmatn';
 }
+
+
+.like-btn {
+    border: none;
+    outline: none;
+    background-color: white;
+    
+}
