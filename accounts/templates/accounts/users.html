@@ -9,6 +9,9 @@
     <hr>
     <div class="row p-3 d-flex justify-content-center">
         {% for user in users %}
+        {% if user == request.user %}
+            <!-- Does nothin, in other words doesn't show self -->
+        {% else %}
         <div class="col-sm-4 p-3" style="background-color: rgba(180, 207, 203, 0.1)">
 
             <div class="card w-100 h-100" style="background-color: rgba(193, 245, 238, 0.2)">
@@ -35,13 +38,14 @@
                 <p class="card-text">{{ user.bio }}</p>
                 </div>
                 <div class="card-footer p-0">
-                    <a href="{% url 'user_detail' user.id %}" class="btn btn-warning hover-bg-warning hover-text-white bnazaninBold w-100 rounded-top-0"
+                    <a href="{% url 'profile' user.id %}" class="btn btn-warning hover-bg-warning hover-text-white bnazaninBold w-100 rounded-top-0"
                        onmouseenter="this.classList.replace('btn-warning','btn-danger')"
                        onmouseleave="this.classList.replace('btn-danger','btn-warning')"
                        style="text-align: center">مشاهده</a> <!--onmouseenter and leave triggers when mouse is on the link or leaves it, gets all the classes it had with classlist and safely replace the one we want-->
                 </div>
             </div>
         </div>
+        {% endif %}
         {% endfor %}
     </div>
 

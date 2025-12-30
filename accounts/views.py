@@ -48,3 +48,29 @@ def logout_view(request):
     logout(request)
     messages.success(request,'شما با موفقیت خارج شدید')
     return redirect('Home')
+
+
+
+# ===========================================================================================================
+# here we have views related to users
+def user_list(request):
+    """
+    view function for List of users and users URL
+    :param request:
+    :return:
+    """
+    u = User.objects.all()
+    return render(request, 'accounts/users.html', {'users': u})
+
+
+def profile(request, user_id):
+    """
+    view function for user details and profile URL
+    :param request:
+    :param int user_id:
+    :return:
+    """
+    profile_detail = User.objects.get(pk=user_id)
+    return render(request, 'accounts/profile.html', {'user': profile_detail})
+
+# ===========================================================================================================

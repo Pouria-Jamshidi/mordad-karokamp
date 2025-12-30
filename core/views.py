@@ -28,8 +28,10 @@ def post_detail(request, post_id):
     :param post_id:
     :return:
     '''
-    post = Post.objects.get(pk=post_id)
-    return render(request, 'core/post_detail.html', {'post': post})
+    post = get_object_or_404(Post.objects.annotate(
+        like_count=Count(F('post_likes'))), pk=post_id)
+    is_liked = post.post_likes.filter(user=request.user).exists()  # So the icon changes depending on whether or not it is liked.
+    return render(request, 'core/post_detail.html', {'post': post,'is_liked': is_liked})
 
 @login_required
 def new_post(request):
@@ -140,36 +142,11 @@ def edit_post(request, post_id):
         return redirect('post_detail', post_id=post.id)
 
 
-# ===========================================================================================================
-# here we have views related to users
-def user_list(request):
-    """
-    view function for List of users and users URL
-    :param request:
-    :return:
-    """
-    u = User.objects.all()
-    return render(request, 'core/users.html', {'users': u})
-
-
-def user_detail(request, user_id):
-    """
-    view function for user details and user_detail URL
-    :param request:
-    :param int user_id:
-    :return:
-    """
-    userDetail = User.objects.get(pk=user_id)
-    return render(request, 'core/user_detail.html', {'user': userDetail})
-
-# ===========================================================================================================
 
 def like(request, post_id):
-    post = get_object_or_404(Post.objects.annotate(
-        like_count = Count(F('post_likes'))), pk=post_id)
-    is_liked = post.post_likes.filter(user=request.user).exists() # So the icon changes depending on whether or not it is liked.
+    post = get_object_or_404(Post, pk=post_id)
     if request.method == 'POST':
         like,created = Like.objects.update_or_create(user=request.user, post=post) # If liked is created, created return True, if updated, it returns False
         if not created:
             like.delete()
-    return render(request,'core/post_detail.html',{'post': post,'is_liked': is_liked})
+    return redirect('post_detail', post_id=post_id)

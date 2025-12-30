@@ -45,3 +45,10 @@
 textarea {
     resize: none;
 }
+
+.like-btn {
+    border: none;
+    outline: none;
+    background-color: transparent;
+
+}

@@ -43,9 +43,11 @@
             <form action={% url 'like' post_id=post.id %} method="post">
                 {% csrf_token %}
                 {% if is_liked %}
-                    <input type="image" width="30" height="30" alt="like-icon" src="{% static 'icons/liked.png' %}">
+{#                    <input type="image" width="30" height="30" alt="like-icon" src="{% static 'icons/liked.png' %}"> <!-- commented cause we switched to bootsraps icons instead of image -->#}
+                    <button class="like-btn" type="submit"><i class="bi bi-heart-fill" title="un-like"></i></button>
                 {% else %}
-                    <input type="image" width="30" height="30" alt="like-icon" src="{% static 'icons/unliked.png' %}">
+{#                    <input type="image" width="30" height="30" alt="like-icon" src="{% static 'icons/unliked.png' %}">#} <!-- commented cause we switched to bootsraps icons instead of image -->
+                    <button class="like-btn" type="submit"><i class="bi bi-heart" title="like"></i></button>
                 {% endif %}
                 {{ post.like_count }}
             </form>

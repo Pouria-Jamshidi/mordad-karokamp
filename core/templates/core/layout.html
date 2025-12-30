@@ -5,16 +5,21 @@
 <!-- =========================================================================== HEAD =========================================================================== -->
 
 <head>
+<!-- Bootstraps icons -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+<!-- bootstraps -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <title>
         {% block title %}
         {% endblock %}
 
     </title>
-<link rel="stylesheet" href="{% static 'css/style.css' %}">
+{% block style %}
+<link rel="stylesheet" href="{% static 'css/style.css' %}"> <!-- loading our style.css file in static -->
+{% endblock %}
     <style>
 
-        {% block style %}
+        {% block style-element %}
         {% endblock %}
 
     </style>
