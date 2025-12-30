@@ -1,6 +1,6 @@
 from django.urls import path
 # from core.forms import EditPostForm
-from core.views import user_list, posts, main_page, post_detail, new_post, user_detail, delete_post, edit_post
+from core.views import user_list, posts, main_page, post_detail, new_post, user_detail, delete_post, edit_post, like
 
 # app_name = 'core' #for reverse calls
 urlpatterns = [
@@ -12,5 +12,6 @@ urlpatterns = [
     path('post/delete/<int:post_id>/',delete_post, name='delete_post'),
     path('users/', user_list, name='users'),
     path('users/user/<int:user_id>/', user_detail, name='user_detail'),
+    path("post/like/<int:post_id>/", like, name="like"),
 
 ]

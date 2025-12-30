@@ -29,7 +29,7 @@ class PostForm(forms.ModelForm): # third way(model form)
 
     class Meta:
         model = Post
-        fields = ['title', 'content','image', 'user', 'category', 'show_to', 'visible']
+        fields = ['title', 'content','image', 'category', 'show_to', 'visible']
 
         widgets = {
             "content": forms.Textarea(attrs={'class': 'form-control'}),
@@ -49,12 +49,12 @@ class PostForm(forms.ModelForm): # third way(model form)
             raise forms.ValidationError("این فیلد نمیتماند کمتر از 3 کاراکتر باشد")
         return content
 
-    def clean(self):
-        data = super().clean()
-        title = data.get('title')
-        content = data.get('content')
-        if title not in content:
-            raise forms.ValidationError('تیتر حتما باید در متن پست باشد')
+    # def clean(self):
+    #     data = super().clean()
+    #     title = data.get('title')
+    #     content = data.get('content')
+    #     if title not in content:
+    #         raise forms.ValidationError('تیتر حتما باید در متن پست باشد')
 
 
 class EditPostForm(forms.ModelForm):

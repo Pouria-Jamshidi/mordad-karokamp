@@ -1,11 +1,13 @@
 from django.contrib import admin
-from core.models import Post
+from core.models import Post,Like
 from django.urls import reverse
 from django.utils.html import format_html
 
 
 # we no longer use this method now that we are doing custom admin
 # admin.site.register(Post)
+
+admin.site.register(Like)
 
 @admin.register(Post)
 class PostAdmin(admin.ModelAdmin):

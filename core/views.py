@@ -1,9 +1,13 @@
+from django.db.models import F,Count
 from django.shortcuts import render, redirect, get_object_or_404
 from core.forms import PostForm, EditPostForm
-from core.models import Post
+from core.models import Post,Like
 from accounts.models import User
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+
 import os
+
 
 
 def main_page(request):
@@ -27,7 +31,7 @@ def post_detail(request, post_id):
     post = Post.objects.get(pk=post_id)
     return render(request, 'core/post_detail.html', {'post': post})
 
-
+@login_required
 def new_post(request):
     # if request.method == "POST":
     #     form_data = request.POST
@@ -40,6 +44,8 @@ def new_post(request):
     #         Post.objects.create(title=title, content=content, user=user, category=category)
     #     else:
     #         pass
+
+    # if request.user.is_authenticated:
     form = PostForm()
     if request.method == 'POST':
         form = PostForm(request.POST, request.FILES)
@@ -57,13 +63,18 @@ def new_post(request):
 
             # =======================================================
             # third way (model form)
-            form.save()
+            newPost = form.save(commit=False)
+            newPost.user = request.user
+            newPost.save()
             messages.success(request, 'پست شما با موفقیت ثبت شد')
             return redirect('posts')
 
     return render(request, 'core/new_post.html', {'newPost_form': form})
+    # else:
+    #     messages.error(request,"برای دیدن این صفحه ورود کنید")
+    #     return redirect('login')
 
-
+@login_required
 def delete_post(request, post_id):
     """
     this exists for deleting a post
@@ -78,12 +89,15 @@ def delete_post(request, post_id):
     # second way, make sure to import in django.shortcuts
     post = get_object_or_404(Post, pk=post_id)
     # post.delete() # we dont wanna actually delete it so we cant use this
-    post.is_deleted = True
-    post.save()
-    messages.success(request, "حذف شد")
-    return redirect('posts')
+    if post.user == request.user or request.user.is_superuser: #only allowed for post's original user or superusers
+        post.is_deleted = True
+        post.save()
+        messages.success(request, "حذف شد")
+        return redirect('posts')
+    else:
+        return redirect('post_detail', post_id=post_id)
 
-
+@login_required
 def edit_post(request, post_id):
     """
     view function for editing a post and 'edit_post' URL.
@@ -94,31 +108,36 @@ def edit_post(request, post_id):
     post = get_object_or_404(Post, pk=post_id)
     form = EditPostForm(instance=post)
 
-    # STEP1: adding the address of before edit pic inside so we can remove it of needed afterward
-    old_image = post.image
+    if request.user == post.user or request.user.is_superuser:
+        # STEP1: adding the address of before edit pic inside so we can remove it of needed afterward
+        old_image = post.image
 
-    if request.method == 'POST':
-        form = EditPostForm(request.POST, request.FILES, instance=post)
-        # user = post.user
-        if form.is_valid():
-            edited_post = form.save(commit=False)
+        if request.method == 'POST':
+            form = EditPostForm(request.POST, request.FILES, instance=post)
+            # user = post.user
+            if form.is_valid():
+                edited_post = form.save(commit=False)
 
-            # STEP 2: image changed or removed
-            if old_image != edited_post.image:
-                # delete old image file from disk
-                old_path = old_image.path
-                if os.path.exists(old_path):
-                    os.remove(old_path)
+                # STEP 2: image changed or removed
+                if old_image != edited_post.image:
+                    # delete old image file from disk
+                    old_path = old_image.path
+                    if os.path.exists(old_path):
+                        os.remove(old_path)
 
-            # way told in class to have a user showin with disable active
-            # old = form.save(commit=False)
-            # old.user = user
-            # old.save()
+                # way told in class to have a user showin with disable active
+                # old = form.save(commit=False)
+                # old.user = user
+                # old.save()
 
-            edited_post.save()
-            messages.success(request, "تغییرات با موفقیت اعمال شد.")
-            return redirect('post_detail', post_id=post.id)
-    return render(request, 'core/edit_post.html', {'form': form, 'post': post})
+                edited_post.save()
+                messages.success(request, "تغییرات با موفقیت اعمال شد.")
+                return redirect('post_detail', post_id=post.id)
+        return render(request, 'core/edit_post.html', {'form': form, 'post': post})
+
+    else:
+        messages.error(request, 'این پست شما نیست نمیتوانید روی آن تغییر انجام دهید')
+        return redirect('post_detail', post_id=post.id)
 
 
 # ===========================================================================================================
@@ -144,4 +163,13 @@ def user_detail(request, user_id):
     return render(request, 'core/user_detail.html', {'user': userDetail})
 
 # ===========================================================================================================
-# Create your views here.
+
+def like(request, post_id):
+    post = get_object_or_404(Post.objects.annotate(
+        like_count = Count(F('post_likes'))), pk=post_id)
+    is_liked = post.post_likes.filter(user=request.user).exists() # So the icon changes depending on whether or not it is liked.
+    if request.method == 'POST':
+        like,created = Like.objects.update_or_create(user=request.user, post=post) # If liked is created, created return True, if updated, it returns False
+        if not created:
+            like.delete()
+    return render(request,'core/post_detail.html',{'post': post,'is_liked': is_liked})
