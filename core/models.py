@@ -58,7 +58,7 @@ class Post(models.Model):
     )
 
     def has_image(self):
-        if self.image.url:
+        if self.image and self.image.url:
             return True
         return False
 
@@ -68,3 +68,21 @@ class Post(models.Model):
     class Meta:
         verbose_name = "پست"
         verbose_name_plural = "پست"
+
+
+class Like(models.Model):
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, verbose_name="کاربر", related_name="likes"
+    )
+    post = models.ForeignKey(
+        Post, on_delete=models.CASCADE, verbose_name="پست", related_name="post_likes"
+    )
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="تاریخ ایجاد")
+
+    class Meta:
+        verbose_name = "لایک"
+        verbose_name_plural = "لایک"
+        unique_together = ("post", "user")
+
+    def __str__(self):
+        return f"{self.post}-{self.user}"
